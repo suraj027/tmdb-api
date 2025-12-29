@@ -8,4 +8,11 @@ app.get('/api/movie/:id', async (req, res) => {
   res.json(data);
 });
 
+app.get('/api/tv/:id', async (req, res) => {
+  const apiKey = process.env.TMDB_API_KEY;
+  const response = await fetch(`https://api.themoviedb.org/3/tv/${req.params.id}?api_key=${apiKey}`);
+  const data = await response.json();
+  res.json(data);
+});
+
 module.exports = app;
