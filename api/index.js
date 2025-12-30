@@ -42,6 +42,19 @@ app.get('/api/movie/streaming', async (req, res) => {
   res.json(data);
 });
 
+// Streaming TV Shows - Get list of TV shows currently available for streaming/rent/buy
+app.get('/api/tv/streaming', async (req, res) => {
+  const apiKey = process.env.TMDB_API_KEY;
+  const { page } = req.query;
+
+  let url = `https://api.themoviedb.org/3/discover/tv?api_key=${apiKey}&watch_region=IN&with_watch_monetization_types=flatrate|rent|buy`;
+  if (page) url += `&page=${page}`;
+
+  const response = await fetch(url);
+  const data = await response.json();
+  res.json(data);
+});
+
 app.get('/api/movie/:id', async (req, res) => {
   const apiKey = process.env.TMDB_API_KEY;
   const response = await fetch(`https://api.themoviedb.org/3/movie/${req.params.id}?api_key=${apiKey}`);
