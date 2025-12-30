@@ -34,7 +34,7 @@ app.get('/api/movie/streaming', async (req, res) => {
   const apiKey = process.env.TMDB_API_KEY;
   const { page } = req.query;
 
-  let url = `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&watch_region=US&with_watch_monetization_types=flatrate|rent|buy`;
+  let url = `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&watch_region=IND&with_watch_monetization_types=flatrate|rent|buy`;
   if (page) url += `&page=${page}`;
 
   const response = await fetch(url);
