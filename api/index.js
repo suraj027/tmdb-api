@@ -21,7 +21,7 @@ app.get('/api/movie/theatrical', async (req, res) => {
   const apiKey = process.env.TMDB_API_KEY;
   const { page } = req.query;
 
-  let url = `https://api.themoviedb.org/3/movie/now_playing?api_key=${apiKey}`;
+  let url = `https://api.themoviedb.org/3/movie/now_playing?api_key=${apiKey}&region=IN`;
   if (page) url += `&page=${page}`;
 
   const response = await fetch(url);

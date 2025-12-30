@@ -10,8 +10,8 @@ Fetches details for a specific movie.
 - **Method**: `GET`
 - **Parameters**: `id` (TMDB Movie ID)
 
-### Get Theatrical Releases
-Fetches movies currently playing in theaters.
+### Get Theatrical Releases (India)
+Fetches movies currently playing in theaters in India.
 - **Endpoint**: `/api/movie/theatrical`
 - **Method**: `GET`
 - **Query Params**: 
