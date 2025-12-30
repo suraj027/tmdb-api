@@ -55,6 +55,19 @@ app.get('/api/tv/streaming', async (req, res) => {
   res.json(data);
 });
 
+// Popular TV Shows - Get list of popular TV shows
+app.get('/api/tv/popular', async (req, res) => {
+  const apiKey = process.env.TMDB_API_KEY;
+  const { page } = req.query;
+
+  let url = `https://api.themoviedb.org/3/tv/popular?api_key=${apiKey}`;
+  if (page) url += `&page=${page}`;
+
+  const response = await fetch(url);
+  const data = await response.json();
+  res.json(data);
+});
+
 app.get('/api/movie/:id', async (req, res) => {
   const apiKey = process.env.TMDB_API_KEY;
   const response = await fetch(`https://api.themoviedb.org/3/movie/${req.params.id}?api_key=${apiKey}`);
