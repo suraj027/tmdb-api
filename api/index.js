@@ -42,6 +42,35 @@ app.get('/api/movie/streaming', async (req, res) => {
   res.json(data);
 });
 
+// Coming Soon Movies - Get list of movies being released soon
+app.get('/api/movie/upcoming', async (req, res) => {
+  const apiKey = process.env.TMDB_API_KEY;
+  const { page } = req.query;
+
+  let url = `https://api.themoviedb.org/3/movie/upcoming?api_key=${apiKey}&region=IN`;
+  if (page) url += `&page=${page}`;
+
+  const response = await fetch(url);
+  const data = await response.json();
+  res.json(data);
+});
+
+// Explore Movies - Discover movies with filters
+app.get('/api/movie/explore', async (req, res) => {
+  const apiKey = process.env.TMDB_API_KEY;
+  const { sort_by, with_genres, primary_release_year, page } = req.query;
+
+  let url = `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}`;
+  if (sort_by) url += `&sort_by=${sort_by}`;
+  if (with_genres) url += `&with_genres=${with_genres}`;
+  if (primary_release_year) url += `&primary_release_year=${primary_release_year}`;
+  if (page) url += `&page=${page}`;
+
+  const response = await fetch(url);
+  const data = await response.json();
+  res.json(data);
+});
+
 // Streaming TV Shows - Get list of TV shows currently available for streaming/rent/buy
 app.get('/api/tv/streaming', async (req, res) => {
   const apiKey = process.env.TMDB_API_KEY;
