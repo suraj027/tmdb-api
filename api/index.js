@@ -29,6 +29,19 @@ app.get('/api/movie/theatrical', async (req, res) => {
   res.json(data);
 });
 
+// Streaming Movies - Get list of movies currently available for streaming/rent/buy
+app.get('/api/movie/streaming', async (req, res) => {
+  const apiKey = process.env.TMDB_API_KEY;
+  const { page } = req.query;
+
+  let url = `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&watch_region=US&with_watch_monetization_types=flatrate|rent|buy`;
+  if (page) url += `&page=${page}`;
+
+  const response = await fetch(url);
+  const data = await response.json();
+  res.json(data);
+});
+
 app.get('/api/movie/:id', async (req, res) => {
   const apiKey = process.env.TMDB_API_KEY;
   const response = await fetch(`https://api.themoviedb.org/3/movie/${req.params.id}?api_key=${apiKey}`);
