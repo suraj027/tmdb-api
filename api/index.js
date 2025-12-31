@@ -124,4 +124,26 @@ app.get('/api/tv/:id', async (req, res) => {
   res.json(data);
 });
 
+
+
+// Watch Providers (Movies) - Get list of streaming providers for movies
+app.get('/api/watch-providers/movie', async (req, res) => {
+  const apiKey = process.env.TMDB_API_KEY;
+  const { watch_region = 'IN' } = req.query;
+
+  const response = await fetch(`https://api.themoviedb.org/3/watch/providers/movie?api_key=${apiKey}&watch_region=${watch_region}`);
+  const data = await response.json();
+  res.json(data);
+});
+
+// Watch Providers (TV) - Get list of streaming providers for TV shows
+app.get('/api/watch-providers/tv', async (req, res) => {
+  const apiKey = process.env.TMDB_API_KEY;
+  const { watch_region = 'IN' } = req.query;
+
+  const response = await fetch(`https://api.themoviedb.org/3/watch/providers/tv?api_key=${apiKey}&watch_region=${watch_region}`);
+  const data = await response.json();
+  res.json(data);
+});
+
 module.exports = app;

@@ -80,3 +80,20 @@ Fetches TV shows airing in the next 7 days.
 - **Method**: `GET`
 - **Query Params**:
   - `page` (optional): Page number
+  - `page` (optional): Page number
+
+## Watch Providers
+
+### Get Movie Watch Providers
+Fetches list of available streaming providers for movies.
+- **Endpoint**: `/api/watch-providers/movie`
+- **Method**: `GET`
+- **Query Params**:
+  - `watch_region` (optional): Country code (default: `IN`)
+
+### Get TV Watch Providers
+Fetches list of available streaming providers for TV shows.
+- **Endpoint**: `/api/watch-providers/tv`
+- **Method**: `GET`
+- **Query Params**:
+  - `watch_region` (optional): Country code (default: `IN`)
