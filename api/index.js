@@ -71,6 +71,32 @@ app.get('/api/movie/explore', async (req, res) => {
   res.json(data);
 });
 
+// Comedy Movies - Get list of comedy movies
+app.get('/api/movie/comedy', async (req, res) => {
+  const apiKey = process.env.TMDB_API_KEY;
+  const { page } = req.query;
+
+  let url = `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&with_genres=35`;
+  if (page) url += `&page=${page}`;
+
+  const response = await fetch(url);
+  const data = await response.json();
+  res.json(data);
+});
+
+// Horror Movies - Get list of horror movies
+app.get('/api/movie/horror', async (req, res) => {
+  const apiKey = process.env.TMDB_API_KEY;
+  const { page } = req.query;
+
+  let url = `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&with_genres=27`;
+  if (page) url += `&page=${page}`;
+
+  const response = await fetch(url);
+  const data = await response.json();
+  res.json(data);
+});
+
 // Streaming TV Shows - Get list of TV shows currently available for streaming/rent/buy
 app.get('/api/tv/streaming', async (req, res) => {
   const apiKey = process.env.TMDB_API_KEY;

@@ -41,6 +41,20 @@ Discover movies with various filters.
   - `primary_release_year` (optional): Filter by release year
   - `page` (optional): Page number
 
+### Get Comedy Movies
+Fetches a list of comedy movies.
+- **Endpoint**: `/api/movie/comedy`
+- **Method**: `GET`
+- **Query Params**:
+  - `page` (optional): Page number
+
+### Get Horror Movies
+Fetches a list of horror movies.
+- **Endpoint**: `/api/movie/horror`
+- **Method**: `GET`
+- **Query Params**:
+  - `page` (optional): Page number
+
 ### Get Movie Changes
 Fetches a list of movie IDs that have been updated.
 - **Endpoint**: `/api/movie/changes`
