@@ -162,14 +162,24 @@ app.get('/api/movie/:id', async (req, res) => {
       directorMovies = directorData.results || [];
     }
 
-    // 4. Combine and send response
+    // 4. Fetch Collection Details (Sequels/Prequels)
+    let collectionData = null;
+    if (movieData.belongs_to_collection) {
+      const collectionId = movieData.belongs_to_collection.id;
+      const collectionUrl = `https://api.themoviedb.org/3/collection/${collectionId}?api_key=${apiKey}`;
+      const collectionResponse = await fetch(collectionUrl);
+      collectionData = await collectionResponse.json();
+    }
+
+    // 5. Combine and send response
     // Filter out the current movie from director's movies if desired, or keep it. 
     // Usually it's nice to see their other work, so filtering the current one is good practice.
     const otherMoviesByDirector = directorMovies.filter(m => m.id !== parseInt(movieId));
 
     res.json({
       ...movieData,
-      director_movies: otherMoviesByDirector
+      director_movies: otherMoviesByDirector,
+      collection: collectionData
     });
 
   } catch (error) {
@@ -180,9 +190,46 @@ app.get('/api/movie/:id', async (req, res) => {
 
 app.get('/api/tv/:id', async (req, res) => {
   const apiKey = process.env.TMDB_API_KEY;
-  const response = await fetch(`https://api.themoviedb.org/3/tv/${req.params.id}?api_key=${apiKey}`);
-  const data = await response.json();
-  res.json(data);
+  const tvId = req.params.id;
+
+  try {
+    // 1. Fetch TV show details with append_to_response
+    const tvUrl = `https://api.themoviedb.org/3/tv/${tvId}?api_key=${apiKey}&append_to_response=credits,videos,images,similar,recommendations`;
+    const tvResponse = await fetch(tvUrl);
+    const tvData = await tvResponse.json();
+
+    if (!tvData || tvData.success === false) {
+      return res.status(404).json({ success: false, message: "TV show not found" });
+    }
+
+    // 2. Find the creator (created_by field) or find director/showrunner from crew
+    // TV shows typically have a 'created_by' array
+    const creator = tvData.created_by?.[0];
+
+    let creatorShows = [];
+    if (creator) {
+      // 3. Fetch TV shows by the creator using person's credits
+      const creatorUrl = `https://api.themoviedb.org/3/person/${creator.id}/tv_credits?api_key=${apiKey}`;
+      const creatorResponse = await fetch(creatorUrl);
+      const creatorData = await creatorResponse.json();
+      // Get crew credits where they are creator/executive producer
+      creatorShows = creatorData.crew?.filter(show =>
+        show.job === 'Creator' || show.job === 'Executive Producer'
+      ) || [];
+    }
+
+    // 4. Combine and send response
+    const otherShowsByCreator = creatorShows.filter(s => s.id !== parseInt(tvId));
+
+    res.json({
+      ...tvData,
+      creator_shows: otherShowsByCreator
+    });
+
+  } catch (error) {
+    console.error("Error fetching TV show details:", error);
+    res.status(500).json({ success: false, message: "Internal Server Error" });
+  }
 });
 
 

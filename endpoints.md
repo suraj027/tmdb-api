@@ -17,6 +17,7 @@ Fetches details for a specific movie.
   - `similar`: Similar movies
   - `recommendations`: Recommended movies
   - `director_movies`: List of other movies by the same director
+  - `collection`: Collection details including parts (sequels/prequels), if available
 
 ### Get Theatrical Releases (India)
 Fetches movies currently playing in theaters in India.
@@ -81,6 +82,14 @@ Fetches details for a specific TV show.
 - **Endpoint**: `/api/tv/:id`
 - **Method**: `GET`
 - **Parameters**: `id` (TMDB TV Show ID)
+- **Response**: Returns TV show object with:
+  - Standard TV show details (name, overview, etc.)
+  - `credits`: Cast and crew
+  - `videos`: Trailers and teasers
+  - `images`: Posters and backdrops
+  - `similar`: Similar TV shows
+  - `recommendations`: Recommended TV shows
+  - `creator_shows`: List of other TV shows by the same creator
 
 ### Get Streaming TV Shows (India)
 Fetches TV shows currently available for streaming, rent, or buy in India.
