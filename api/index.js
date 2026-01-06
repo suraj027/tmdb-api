@@ -138,9 +138,44 @@ app.get('/api/tv/on-the-air', async (req, res) => {
 
 app.get('/api/movie/:id', async (req, res) => {
   const apiKey = process.env.TMDB_API_KEY;
-  const response = await fetch(`https://api.themoviedb.org/3/movie/${req.params.id}?api_key=${apiKey}`);
-  const data = await response.json();
-  res.json(data);
+  const movieId = req.params.id;
+
+  try {
+    // 1. Fetch movie details with append_to_response
+    const movieUrl = `https://api.themoviedb.org/3/movie/${movieId}?api_key=${apiKey}&append_to_response=credits,videos,images,similar,recommendations`;
+    const movieResponse = await fetch(movieUrl);
+    const movieData = await movieResponse.json();
+
+    if (!movieData || movieData.success === false) {
+      return res.status(404).json({ success: false, message: "Movie not found" });
+    }
+
+    // 2. Find the director
+    const director = movieData.credits?.crew?.find(person => person.job === 'Director');
+
+    let directorMovies = [];
+    if (director) {
+      // 3. Fetch movies by the director
+      const directorUrl = `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&with_crew=${director.id}&sort_by=popularity.desc&page=1`;
+      const directorResponse = await fetch(directorUrl);
+      const directorData = await directorResponse.json();
+      directorMovies = directorData.results || [];
+    }
+
+    // 4. Combine and send response
+    // Filter out the current movie from director's movies if desired, or keep it. 
+    // Usually it's nice to see their other work, so filtering the current one is good practice.
+    const otherMoviesByDirector = directorMovies.filter(m => m.id !== parseInt(movieId));
+
+    res.json({
+      ...movieData,
+      director_movies: otherMoviesByDirector
+    });
+
+  } catch (error) {
+    console.error("Error fetching movie details:", error);
+    res.status(500).json({ success: false, message: "Internal Server Error" });
+  }
 });
 
 app.get('/api/tv/:id', async (req, res) => {

@@ -9,6 +9,14 @@ Fetches details for a specific movie.
 - **Endpoint**: `/api/movie/:id`
 - **Method**: `GET`
 - **Parameters**: `id` (TMDB Movie ID)
+- **Response**: Returns movie object with:
+  - Standard movie details (title, overview, etc.)
+  - `credits`: Cast and crew
+  - `videos`: Trailers and teasers
+  - `images`: Posters and backdrops
+  - `similar`: Similar movies
+  - `recommendations`: Recommended movies
+  - `director_movies`: List of other movies by the same director
 
 ### Get Theatrical Releases (India)
 Fetches movies currently playing in theaters in India.
