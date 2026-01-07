@@ -11,6 +11,13 @@ Fetches details for a specific movie.
 - **Parameters**: `id` (TMDB Movie ID)
 - **Response**: Returns movie object with:
   - Standard movie details (title, overview, etc.)
+  - `runtime`: Movie duration in minutes
+  - `budget` / `production_cost`: Production cost in USD
+  - `revenue`: Box office revenue in USD
+  - `rating`: Average user rating (0-10)
+  - `content_ratings`: content rating (e.g., "PG-13", "A")
+  - `status`: Release status (e.g., "Released", "Post Production", "In Production")
+  - `watch_providers`: Streaming availability by country (e.g., inside `results.IN` for India)
   - `credits`: Cast and crew
   - `videos`: Trailers and teasers
   - `images`: Posters and backdrops

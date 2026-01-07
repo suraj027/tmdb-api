@@ -142,7 +142,7 @@ app.get('/api/movie/:id', async (req, res) => {
 
   try {
     // 1. Fetch movie details with append_to_response
-    const movieUrl = `https://api.themoviedb.org/3/movie/${movieId}?api_key=${apiKey}&append_to_response=credits,videos,images,similar,recommendations`;
+    const movieUrl = `https://api.themoviedb.org/3/movie/${movieId}?api_key=${apiKey}&append_to_response=credits,videos,images,similar,recommendations,watch/providers,release_dates`;
     const movieResponse = await fetch(movieUrl);
     const movieData = await movieResponse.json();
 
@@ -176,10 +176,21 @@ app.get('/api/movie/:id', async (req, res) => {
     // Usually it's nice to see their other work, so filtering the current one is good practice.
     const otherMoviesByDirector = directorMovies.filter(m => m.id !== parseInt(movieId));
 
+    // Helper to extract certification
+    const getCertification = (dates) => {
+      const country = dates?.results?.find(r => r.iso_3166_1 === 'IN') || dates?.results?.find(r => r.iso_3166_1 === 'US');
+      const release = country?.release_dates?.find(d => d.certification);
+      return release?.certification || null;
+    };
+
     res.json({
       ...movieData,
       director_movies: otherMoviesByDirector,
-      collection: collectionData
+      collection: collectionData,
+      production_cost: movieData.budget,
+      watch_providers: movieData['watch/providers'],
+      rating: movieData.vote_average,
+      content_ratings: getCertification(movieData.release_dates)
     });
 
   } catch (error) {
