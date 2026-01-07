@@ -190,7 +190,9 @@ app.get('/api/movie/:id', async (req, res) => {
       production_cost: movieData.budget,
       watch_providers: movieData['watch/providers'],
       rating: movieData.vote_average,
-      content_ratings: getCertification(movieData.release_dates)
+      content_ratings: getCertification(movieData.release_dates),
+      cast: movieData.credits?.cast || [],
+      crew: movieData.credits?.crew || []
     });
 
   } catch (error) {
@@ -205,7 +207,7 @@ app.get('/api/tv/:id', async (req, res) => {
 
   try {
     // 1. Fetch TV show details with append_to_response
-    const tvUrl = `https://api.themoviedb.org/3/tv/${tvId}?api_key=${apiKey}&append_to_response=credits,videos,images,similar,recommendations`;
+    const tvUrl = `https://api.themoviedb.org/3/tv/${tvId}?api_key=${apiKey}&append_to_response=credits,videos,images,similar,recommendations,content_ratings,watch/providers`;
     const tvResponse = await fetch(tvUrl);
     const tvData = await tvResponse.json();
 
@@ -229,12 +231,29 @@ app.get('/api/tv/:id', async (req, res) => {
       ) || [];
     }
 
+    // Helper to extract TV content rating
+    const getTvCertification = (ratings) => {
+      const country = ratings?.results?.find(r => r.iso_3166_1 === 'IN') || ratings?.results?.find(r => r.iso_3166_1 === 'US');
+      return country?.rating || null;
+    };
+
     // 4. Combine and send response
     const otherShowsByCreator = creatorShows.filter(s => s.id !== parseInt(tvId));
 
     res.json({
       ...tvData,
-      creator_shows: otherShowsByCreator
+      creator_shows: otherShowsByCreator,
+      latest_episode: tvData.last_episode_to_air,
+      rating: tvData.vote_average,
+      content_ratings: getTvCertification(tvData.content_ratings),
+      watch_providers: tvData['watch/providers'],
+      status: tvData.status,
+      genres: tvData.genres,
+      language: tvData.original_language,
+      trailers: tvData.videos?.results?.filter(v => v.type === "Trailer") || [],
+      seasons: tvData.seasons,
+      cast: tvData.credits?.cast || [],
+      crew: tvData.credits?.crew || []
     });
 
   } catch (error) {

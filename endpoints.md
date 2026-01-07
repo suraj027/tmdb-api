@@ -18,7 +18,8 @@ Fetches details for a specific movie.
   - `content_ratings`: content rating (e.g., "PG-13", "A")
   - `status`: Release status (e.g., "Released", "Post Production", "In Production")
   - `watch_providers`: Streaming availability by country (e.g., inside `results.IN` for India)
-  - `credits`: Cast and crew
+  - `cast`: List of cast members (actors)
+  - `crew`: List of crew members (directors, writers, etc.)
   - `videos`: Trailers and teasers
   - `images`: Posters and backdrops
   - `similar`: Similar movies
@@ -97,6 +98,17 @@ Fetches details for a specific TV show.
   - `similar`: Similar TV shows
   - `recommendations`: Recommended TV shows
   - `creator_shows`: List of other TV shows by the same creator
+  - `latest_episode`: Details of the last aired episode (date, episode number, season number)
+  - `rating`: Average user rating (0-10)
+  - `content_ratings`: Content rating (e.g., "TV-MA", "TV-14")
+  - `watch_providers`: Streaming availability by country
+  - `status`: Show status (e.g., "Returning Series", "Ended")
+  - `genres`: Array of genre objects (e.g., `[{ id: 18, name: "Drama" }]`)
+  - `language`: Original language code (e.g., "en", "ko")
+  - `trailers`: List of video objects where type is "Trailer"
+  - `seasons`: List of season summary objects (id, name, episode_count, air_date, poster_path)
+  - `cast`: List of cast members (actors)
+  - `crew`: List of crew members (directors, writers, etc.)
 
 ### Get Streaming TV Shows (India)
 Fetches TV shows currently available for streaming, rent, or buy in India.
